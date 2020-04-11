@@ -1,0 +1,1 @@
+<<< "Hello World" >>>;  // Prints "Hello World" to the Console Monitor
