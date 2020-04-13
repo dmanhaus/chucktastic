@@ -27,32 +27,35 @@ fun void play_scale( float tonic, int notes[] )
     0 => note.gain;
 }
 
+fun int[] get_scale( string name )
+{
+    int scaleName[0];
+    // Assign integer index values to an associative array, with a string index to match to the "name" function argument 
+    0 => scaleName["empty"];         // This index maps to an array containing one member, 0, which becomes the list returned when an invalid name is passed
+    1 => scaleName["chromatic"];
+    2 => scaleName["natural_major"];
+    3 => scaleName["natural_minor"];
+    4 => scaleName["octatonic"];
+    5 => scaleName["pentatonic"];
+    
+    // These arrays represent scales as a list of (integer) half-step intervals from the tonic 
+    [ [ 0 ] ,                                          // 0, Default to Tonic (name not found) 
+    [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] ,     // 1, Chromatic
+    [ 0, 2, 4, 5, 7, 9, 11, 12 ] ,                     // 2, Natural Major 
+    [ 0, 2, 3, 5, 7, 8, 10, 12 ] ,                     // 3, Natural Minor
+    [ 0, 2, 3, 5, 6, 8, 9, 11, 12 ] ,                  // 4, Octatonic
+    [ 0, 2, 4, 7, 9, 12 ]                              // 5, Pentatonic
+    ] @=> int scale [][];
+
+    // Get the scale at the scaleName index passed in as the "name" function argument
+    <<< "Getting ", name >>>;
+    <<< scale[scaleName[name]] >>>;
+    return scale[scaleName[name]];
+}
+
 261.63 => float tonic; // C4
 <<< "tonic:", tonic >>>;
 
-// These arrays represent scales as a list of (integer) half-step intervals from the tonic 
-[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] @=> int chromatic_scale[]; 
-[ 0, 2, 4, 5, 7, 9, 11, 12 ] @=> int natural_major_scale[]; 
-[ 0, 2, 3, 5, 7, 8, 10, 12 ] @=> int natural_minor_scale[]; 
-[ 0, 2, 3, 5, 6, 8, 9, 11, 12 ] @=> int octatonic_scale[];
-[ 0, 2, 4, 7, 9, 12 ] @=> int pentatonic_scale[];
-
-<<< "chromatic scale" >>>;
-play_scale(tonic, chromatic_scale);
-1::second => now; // rest
-
-<<< "major scale" >>>;
-play_scale(tonic, natural_major_scale);
-1::second => now; // rest
-
-<<< "minor scale" >>>;
-play_scale(tonic, natural_minor_scale);
-1::second => now; // rest
-
-<<< "octatonic scale" >>>;
-play_scale(tonic, octatonic_scale);
-1::second => now; // rest
-
-<<< "pentatonic scale" >>>;
-play_scale(tonic, pentatonic_scale);
+// play_scale(tonic, chromatic_scale);
+play_scale(tonic, get_scale("natural_minor"));
 1::second => now; // rest
