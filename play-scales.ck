@@ -30,7 +30,7 @@ fun void play_scale( float tonic, int notes[] )
 261.63 => float tonic; // C4
 <<< "tonic:", tonic >>>;
 
-// These arrays represent scales as a list of integer/intervals from the tonic 
+// These arrays represent scales as a list of (integer) half-step intervals from the tonic 
 [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] @=> int chromatic_scale[]; 
 [ 0, 2, 4, 5, 7, 9, 11, 12 ] @=> int natural_major_scale[]; 
 [ 0, 2, 3, 5, 7, 8, 10, 12 ] @=> int natural_minor_scale[]; 
