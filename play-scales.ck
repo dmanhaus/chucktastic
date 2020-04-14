@@ -34,22 +34,36 @@ fun int[] get_scale( string name )
     0 => scaleName["empty"];         // This index maps to an array containing one member, 0, which becomes the list returned when an invalid name is passed
     1 => scaleName["chromatic"];
     2 => scaleName["natural_major"];
+    2 => scaleName["ionian_mode"];
     3 => scaleName["natural_minor"];
-    4 => scaleName["octatonic"];
-    5 => scaleName["pentatonic"];
+    4 => scaleName["harmonic_minor"];
+    5 => scaleName["octatonic"];
+    6 => scaleName["pentatonic"];
+    7 => scaleName["dorian_mode"];
+    8 => scaleName["phrygian_mode"];
+    9 => scaleName["lydian_mode"];
+    10 => scaleName["mixolydian_mode"];
+    11 => scaleName["aeolian_mode"];
+    12 => scaleName["locrian_mode"];
     
-    // These arrays represent scales as a list of (integer) half-step intervals from the tonic 
+    // These arrays represent scales as a list of (integer) semitone intervals from the tonic 
     [ [ 0 ] ,                                          // 0, Default to Tonic (name not found) 
     [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] ,     // 1, Chromatic
-    [ 0, 2, 4, 5, 7, 9, 11, 12 ] ,                     // 2, Natural Major 
+    [ 0, 2, 4, 5, 7, 9, 11, 12 ] ,                     // 2, Natural Major, Ionian mode 
     [ 0, 2, 3, 5, 7, 8, 10, 12 ] ,                     // 3, Natural Minor
-    [ 0, 2, 3, 5, 6, 8, 9, 11, 12 ] ,                  // 4, Octatonic
-    [ 0, 2, 4, 7, 9, 12 ]                              // 5, Pentatonic
+    [ 0, 2, 3, 5, 7, 8, 11, 12 ] ,                     // 4, Harmonic Minor
+    [ 0, 2, 3, 5, 6, 8, 9, 11, 12 ] ,                  // 5, Octatonic
+    [ 0, 2, 4, 7, 9, 12 ] ,                            // 6, Pentatonic
+    [ 0, 2, 3, 5, 7, 9, 10, 12],                       // 7, Dorian mode
+    [ 0, 1, 3, 5, 7, 8, 10, 12 ],                      // 8, Phrygian mode 
+    [ 0, 2, 4, 6, 7, 9, 11, 12 ],                      // 9, Lydian mode
+    [ 0, 2, 4, 5, 7, 9, 10, 12 ],                      // 10, Mixolydian mode
+    [ 0, 2, 3, 5, 7, 8, 10, 12 ],                      // 11, Aeolian mode
+    [ 0, 1, 3, 5, 6, 8, 10, 12 ]                       // 12, Locrian mode
     ] @=> int scale [][];
 
     // Get the scale at the scaleName index passed in as the "name" function argument
-    <<< "Getting ", name >>>;
-    <<< scale[scaleName[name]] >>>;
+    <<< "Playing", name, "scale" >>>;
     return scale[scaleName[name]];
 }
 
@@ -57,5 +71,5 @@ fun int[] get_scale( string name )
 <<< "tonic:", tonic >>>;
 
 // play_scale(tonic, chromatic_scale);
-play_scale(tonic, get_scale("natural_minor"));
+play_scale(tonic, get_scale("locrian_mode"));
 1::second => now; // rest
