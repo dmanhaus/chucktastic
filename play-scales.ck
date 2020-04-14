@@ -63,13 +63,52 @@ fun int[] get_scale( string name )
     ] @=> int scale [][];
 
     // Get the scale at the scaleName index passed in as the "name" function argument
-    <<< "Playing", name, "scale" >>>;
+    // <<< "Getting", name, "scale" >>>;
     return scale[scaleName[name]];
 }
 
-261.63 => float tonic; // C4
-<<< "tonic:", tonic >>>;
+fun float get_frequency_for_note( string note )
+{
+    ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G","G#"] @=> string notes[];
+    0 => int interval;
+    // Get the index of the interval matching the note provided
+    for(0 => int i; i < notes.cap(); i++)
+    {
+        // <<< i, note, notes[i], notes[i] == note >>>;
+        if( notes[ i ] == note ) 
+        {
+           <<< notes[ i ] >>>;
+           i => interval;
+        }
+    }
 
-// play_scale(tonic, chromatic_scale);
-play_scale(tonic, get_scale("locrian_mode"));
+    get_scale("chromatic") @=> int chromatic[];
+
+    // We start from A4 and then find the frequency of the target tonic by relation using the get_scale function 
+    440.00 => float A4;   
+
+    calc_harmonic_freq(A4, chromatic[interval]) => float frequency; 
+    // <<< "tonic frequency", frequency >>>;
+    return frequency;
+}
+
+SinOsc note => dac;
+0.075 => note.gain;
+
+"F" => string noteName;
+
+// Play tonic
+get_frequency_for_note(noteName) => float tonic;
+tonic => note.freq;
+<<< "tonic:", noteName, tonic, "Hz" >>>;
+
+2::second => now;
+0 => note.gain;
+
 1::second => now; // rest
+
+// Play scale
+"natural_major" => string scaleName;
+<<< "Playing", scaleName >>>; 
+play_scale(tonic, get_scale(scaleName));
+
