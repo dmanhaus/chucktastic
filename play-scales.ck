@@ -67,6 +67,41 @@ fun int[] get_scale( string name )
     return scale[scaleName[name]];
 }
 
+fun void play_chord( float tonic, int notes[] )
+{
+    SinOsc n1 => dac;
+    SinOsc n2 => dac;
+    SinOsc n3 => dac;
+
+    0.075 => n1.gain;
+    0.075 => n2.gain;
+    0.075 => n3.gain;
+
+    calc_harmonic_freq(tonic, notes[0]) => n1.freq;
+    calc_harmonic_freq(tonic, notes[1]) => n2.freq;
+    calc_harmonic_freq(tonic, notes[2]) => n3.freq;
+
+    1::second => now;
+    0 => n1.gain;
+    0 => n2.gain;
+    0 => n3.gain;
+}
+
+fun int[] get_chord( string name)
+{
+   int chordName[0];
+   0 => chordName["empty"];
+   1 => chordName["major_triad"];
+   2 => chordName["minor_triad"];
+
+   [ [ 0 ] ,                // 0, Default to Tonic (no name found)
+   [ 0, 4, 7],              // 1, Major Triad
+   [ 0, 3, 7]               // 2, Minor Triad
+   ] @=> int chord [][];
+
+   return chord[chordName[name]];    
+}
+
 fun float get_frequency_for_note( string note )
 {
     ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G","G#"] @=> string notes[];
@@ -95,7 +130,7 @@ fun float get_frequency_for_note( string note )
 SinOsc note => dac;
 0.075 => note.gain;
 
-"F" => string noteName;
+"G" => string noteName;
 
 // Play tonic
 get_frequency_for_note(noteName) => float tonic;
@@ -108,7 +143,28 @@ tonic => note.freq;
 1::second => now; // rest
 
 // Play scale
-"natural_major" => string scaleName;
-<<< "Playing", scaleName >>>; 
+// "chromatic" => string scaleName;
+"natural_major" => string scaleName;  
+// "natural_minor" => string scaleName;  
+// "harmonic_minor" => string scaleName;
+// "octatonic" => string scaleName;
+// "pentatonic" => string scaleName;
+// "dorian_mode" => string scaleName;
+// "phrygian_mode" => string scaleName;
+// "lydian_mode" => string scaleName;
+// "mixolydian_mode" => string scaleName;
+// "aeolian_mode" => string scaleName;
+// "locrian_mode" => string scaleName;
+
+<<< "Playing", scaleName, "scale" >>>; 
 play_scale(tonic, get_scale(scaleName));
 
+"major_triad" => string chordName;
+<<< "Playing", noteName, chordName, "chord" >>>;
+
+play_chord(tonic, get_chord(chordName));
+
+"minor_triad" => chordName;
+<<< "Playing", noteName, chordName, "chord" >>>;
+
+play_chord(tonic, get_chord(chordName));
