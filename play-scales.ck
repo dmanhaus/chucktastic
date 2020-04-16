@@ -22,7 +22,7 @@ fun void play_scale( float tonic, int notes[] )
         <<< "interval:", i, "degrees:", notes[i], "freq:", interval >>>;
         
         // Play the interval
-        .5::second => now;
+        .375::second => now;
     }
     0 => note.gain;
 }
@@ -69,22 +69,49 @@ fun int[] get_scale( string name )
 
 fun void play_chord( float tonic, int notes[] )
 {
-    SinOsc n1 => dac;
-    SinOsc n2 => dac;
-    SinOsc n3 => dac;
+    SinOsc n1 => JCRev r1 => dac;
+    SinOsc n2 => JCRev r2 => dac;
+    SinOsc n3 => JCRev r3 => dac;
+    SinOsc n4 => JCRev r4 => dac;
+    SinOsc n5 => JCRev r5 => dac;
 
-    0.075 => n1.gain;
-    0.075 => n2.gain;
-    0.075 => n3.gain;
-
+    0.075 => float gainLevel;
     calc_harmonic_freq(tonic, notes[0]) => n1.freq;
     calc_harmonic_freq(tonic, notes[1]) => n2.freq;
     calc_harmonic_freq(tonic, notes[2]) => n3.freq;
+    gainLevel => n1.gain;
+    gainLevel => n2.gain;
+    gainLevel => n3.gain;
+    0 => n4.gain;
+    0 => n5.gain;
+
+    if(notes.cap()==4)
+    {
+        <<< notes.cap(), 4, "notes in chord" >>>;
+        calc_harmonic_freq(tonic, notes[3]) => n4.freq;
+        gainLevel => n4.gain;
+    }
+    if(notes.cap()==5)
+    {
+        <<< notes.cap(), 5, "notes in chord" >>>;
+        calc_harmonic_freq(tonic, notes[4]) => n5.freq;
+        gainLevel => n5.gain;
+    }
+    
+
+    0.1 => float mixLevel;
+    mixLevel => r1.mix;
+    mixLevel => r2.mix;
+    mixLevel => r3.mix;
+    mixLevel => r4.mix;
+    mixLevel => r5.mix;
 
     1::second => now;
     0 => n1.gain;
     0 => n2.gain;
     0 => n3.gain;
+    0 => n4.gain;
+    0 => n5.gain;
 }
 
 fun int[] get_chord( string name)
@@ -93,10 +120,20 @@ fun int[] get_chord( string name)
    0 => chordName["empty"];
    1 => chordName["major_triad"];
    2 => chordName["minor_triad"];
+   3 => chordName["diminished_triad"];
+   4 => chordName["augmented_triad"];
+   5 => chordName["suspended_fourth"];
+   6 => chordName["suspended_second"];
+   7 => chordName["added_ninth"];
 
    [ [ 0 ] ,                // 0, Default to Tonic (no name found)
    [ 0, 4, 7],              // 1, Major Triad
-   [ 0, 3, 7]               // 2, Minor Triad
+   [ 0, 3, 7],              // 2, Minor Triad
+   [ 0, 3, 6],              // 3, Diminished Triad
+   [ 0, 4, 8],              // 4, Augmented Triad
+   [ 0, 5, 7],              // 5, Suspended Fourth
+   [ 0, 2, 7],              // 6, Suspended Second
+   [ 0, 4, 7, 14]           // 7, Added Ninth
    ] @=> int chord [][];
 
    return chord[chordName[name]];    
@@ -176,37 +213,33 @@ tonic => note.freq;
 1::second => now; // rest
 
 // Play scale
-// "chromatic" => string scaleName;
-"natural_major" => string scaleName;  
-// "natural_minor" => string scaleName;  
-// "harmonic_minor" => string scaleName;
-// "octatonic" => string scaleName;
-// "pentatonic" => string scaleName;
-// "dorian_mode" => string scaleName;
-// "phrygian_mode" => string scaleName;
-// "lydian_mode" => string scaleName;
-// "mixolydian_mode" => string scaleName;
-// "aeolian_mode" => string scaleName;
+["chromatic", "natural_major", "natural_minor", "harmonic_minor", "octatonic", "pentatonic", "dorian_mode", "phrygian_mode", "lydian_mode", "mixolydian_mode", "aeolian_mode", "locrian_mode"] @=> string modes[];
 // "locrian_mode" => string scaleName;
 
-<<< "Playing", scaleName, "scale" >>>; 
-play_scale(tonic, get_scale(scaleName));
+for(0 => int i; i < modes.cap(); i++)
+{
+    modes[i] => string scaleName;
+    <<< "Playing", scaleName, "scale" >>>; 
+    play_scale(tonic, get_scale(scaleName));
+    .75::second => now;
+}
 
-"major_triad" => string chordName;
-<<< "Playing", noteName, chordName, "chord" >>>;
+["major_triad", "minor_triad", "diminished_triad", "augmented_triad", "suspended_fourth", "suspended_second", "added_ninth" , "major_triad"] @=> string chords[];
 
-play_chord(tonic, get_chord(chordName));
+for(0 => int i; i < chords.cap(); i++)
+{
+    chords[i] => string chordName;
+    <<< "Playing", noteName, chordName, "chord" >>>;
+    play_chord(tonic, get_chord(chordName));
+    1::second => now;
+}
 
-"minor_triad" => chordName;
-<<< "Playing", noteName, chordName, "chord" >>>;
-
-play_chord(tonic, get_chord(chordName));
+0.075 => note.gain;
 
 <<< "Playing", noteName, "octaves" >>>;
-0.075 => note.gain;
 for(-1 => int i; i < 10; i++)
 {
     <<< noteName, i >>>;
     Math.mtof(get_midi_number_for_note(noteName, i)) => note.freq;  // Get the midi number of the note and convert it to the frequency
-    .5::second => now;
+    .325::second => now;
 }
