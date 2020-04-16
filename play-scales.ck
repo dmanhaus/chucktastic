@@ -127,6 +127,39 @@ fun float get_frequency_for_note( string note )
     return frequency;
 }
 
+fun int get_midi_number_for_note( string note, int octave)
+{
+    ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#","B"] @=> string notes[];
+    0 => int interval;
+    
+    for(0 => int i; i < notes.cap(); i++)
+    {
+        if( notes[ i ] == note ) 
+        {
+            // <<< notes [ i ] >>>;
+            i => interval;
+        }
+    }
+
+    octave++; // increment octave by one to align with array index
+    
+    [
+    [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ],                       // 0  (octave -1) 
+    [ 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ],             // 1  (octave  0)
+    [ 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35 ],             // 2  (octave  1)
+    [ 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 ],             // 3  (octave  2)
+    [ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59 ],             // 4  (octave  3)
+    [ 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71 ],             // 5  (octave  4)
+    [ 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83 ],             // 6  (octave  5)
+    [ 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95 ],             // 7  (octave  6)
+    [ 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107],      // 8  (octave  7)
+    [ 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119],  // 9  (octave  8)
+    [ 120, 121, 122, 123, 124, 125, 126, 127]                       // 10 (octave  9)
+    ] @=> int midi_note_table [][];
+    
+    return midi_note_table[octave] [interval];
+}
+
 SinOsc note => dac;
 0.075 => note.gain;
 
@@ -168,3 +201,12 @@ play_chord(tonic, get_chord(chordName));
 <<< "Playing", noteName, chordName, "chord" >>>;
 
 play_chord(tonic, get_chord(chordName));
+
+<<< "Playing", noteName, "octaves" >>>;
+0.075 => note.gain;
+for(-1 => int i; i < 10; i++)
+{
+    <<< noteName, i >>>;
+    Math.mtof(get_midi_number_for_note(noteName, i)) => note.freq;  // Get the midi number of the note and convert it to the frequency
+    .5::second => now;
+}
