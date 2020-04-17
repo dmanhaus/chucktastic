@@ -87,13 +87,13 @@ fun void play_chord( float tonic, int notes[] )
 
     if(notes.cap()==4)
     {
-        <<< notes.cap(), 4, "notes in chord" >>>;
+        // <<< notes.cap(), 4, "notes in chord" >>>;
         calc_harmonic_freq(tonic, notes[3]) => n4.freq;
         gainLevel => n4.gain;
     }
     if(notes.cap()==5)
     {
-        <<< notes.cap(), 5, "notes in chord" >>>;
+        // <<< notes.cap(), 5, "notes in chord" >>>;
         calc_harmonic_freq(tonic, notes[4]) => n5.freq;
         gainLevel => n5.gain;
     }
@@ -125,6 +125,9 @@ fun int[] get_chord( string name)
    5 => chordName["suspended_fourth"];
    6 => chordName["suspended_second"];
    7 => chordName["added_ninth"];
+   8 => chordName["diminished_seventh"];
+   9 => chordName["minor_seventh"];
+   10 => chordName["minor_major_seventh"];
 
    [ [ 0 ] ,                // 0, Default to Tonic (no name found)
    [ 0, 4, 7],              // 1, Major Triad
@@ -133,7 +136,11 @@ fun int[] get_chord( string name)
    [ 0, 4, 8],              // 4, Augmented Triad
    [ 0, 5, 7],              // 5, Suspended Fourth
    [ 0, 2, 7],              // 6, Suspended Second
-   [ 0, 4, 7, 14]           // 7, Added Ninth
+   [ 0, 4, 7, 14],          // 7, Added Ninth
+   [ 0, 3, 6, 9],           // 8, Diminished Seventh
+   [ 0, 3, 7, 10],          // 9, Minor Seventh
+   [ 0, 3, 7, 11]           // 10, Minor Major Seventh
+
    ] @=> int chord [][];
 
    return chord[chordName[name]];    
@@ -212,19 +219,20 @@ tonic => note.freq;
 
 1::second => now; // rest
 
-// Play scale
-["chromatic", "natural_major", "natural_minor", "harmonic_minor", "octatonic", "pentatonic", "dorian_mode", "phrygian_mode", "lydian_mode", "mixolydian_mode", "aeolian_mode", "locrian_mode"] @=> string modes[];
-// "locrian_mode" => string scaleName;
+// // Play scale
+// ["chromatic", "natural_major", "natural_minor", "harmonic_minor", "octatonic", "pentatonic", "dorian_mode", "phrygian_mode", "lydian_mode", "mixolydian_mode", "aeolian_mode", "locrian_mode"] @=> string modes[];
+// // "locrian_mode" => string scaleName;
 
-for(0 => int i; i < modes.cap(); i++)
-{
-    modes[i] => string scaleName;
-    <<< "Playing", scaleName, "scale" >>>; 
-    play_scale(tonic, get_scale(scaleName));
-    .75::second => now;
-}
+// for(0 => int i; i < modes.cap(); i++)
+// {
+//     modes[i] => string scaleName;
+//     <<< "Playing", scaleName, "scale" >>>; 
+//     play_scale(tonic, get_scale(scaleName));
+//     .75::second => now;
+// }
 
-["major_triad", "minor_triad", "diminished_triad", "augmented_triad", "suspended_fourth", "suspended_second", "added_ninth" , "major_triad"] @=> string chords[];
+["major_triad", "minor_triad", "diminished_triad", "augmented_triad", "suspended_fourth", "suspended_second", "added_ninth" , "major_triad", "diminished_seventh","minor_seventh", "minor_major_seventh"] @=> string chords[];
+// ["diminished_seventh"] @=> string chords[];
 
 for(0 => int i; i < chords.cap(); i++)
 {
@@ -234,12 +242,12 @@ for(0 => int i; i < chords.cap(); i++)
     1::second => now;
 }
 
-0.075 => note.gain;
+// 0.075 => note.gain;
 
-<<< "Playing", noteName, "octaves" >>>;
-for(-1 => int i; i < 10; i++)
-{
-    <<< noteName, i >>>;
-    Math.mtof(get_midi_number_for_note(noteName, i)) => note.freq;  // Get the midi number of the note and convert it to the frequency
-    .325::second => now;
-}
+// <<< "Playing", noteName, "octaves" >>>;
+// for(-1 => int i; i < 10; i++)
+// {
+//     <<< noteName, i >>>;
+//     Math.mtof(get_midi_number_for_note(noteName, i)) => note.freq;  // Get the midi number of the note and convert it to the frequency
+//     .325::second => now;
+// }
