@@ -3,7 +3,7 @@ FreqCalc fc;
 SinOsc note => dac;
 0.075 => note.gain;
 
-"G" => string noteName;
+"A" => string noteName;
 
 // Play tonic
 fc.get_frequency_for_note(noteName) => float tonic;
