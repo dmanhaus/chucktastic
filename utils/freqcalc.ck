@@ -119,27 +119,55 @@ public class FreqCalc
     int chordName[0];
     0 => chordName["empty"];
     1 => chordName["major_triad"];
+    1 => chordName["maj"];
+    
     2 => chordName["minor_triad"];
+    2 => chordName["min"];
+    
     3 => chordName["diminished_triad"];
+    3 => chordName["dim"];
+    3 => chordName["o"];
+    
     4 => chordName["augmented_triad"];
-    5 => chordName["suspended_fourth"];
-    6 => chordName["suspended_second"];
-    7 => chordName["added_ninth"];
-    8 => chordName["diminished_seventh"];
-    9 => chordName["minor_seventh"];
-    10 => chordName["minor_major_seventh"];
+    4 => chordName["aug"];
+    4 => chordName["+"];
 
-    [ [ 0 ] ,                // 0, Default to Tonic (no name found)
+    5 => chordName["suspended_second"];
+    5 => chordName["sus2"];
+
+    6 => chordName["suspended_fourth"];
+    6 => chordName["sus4"];
+    
+    7 => chordName["added_ninth"];
+    7 => chordName["add9"];
+
+    8 => chordName["diminished_seventh"];
+    8 => chordName["dim7"];
+    
+    9 => chordName["minor_seventh"];
+    9 => chordName["min7"];
+    9 => chordName["m7"];
+    
+    10 => chordName["major_seventh"];
+    10 => chordName["maj7"];
+    10 => chordName["7"];
+    
+    11 => chordName["minor_major_seventh"];
+    11 => chordName["minmaj7"];
+    11 => chordName["mM7"];
+
+    [ [-1] ,                  // 0, Default to empty chord (no name found)
     [ 0, 4, 7],              // 1, Major Triad
     [ 0, 3, 7],              // 2, Minor Triad
     [ 0, 3, 6],              // 3, Diminished Triad
     [ 0, 4, 8],              // 4, Augmented Triad
-    [ 0, 5, 7],              // 5, Suspended Fourth
-    [ 0, 2, 7],              // 6, Suspended Second
+    [ 0, 2, 7],              // 5, Suspended Second
+    [ 0, 5, 7],              // 6, Suspended Fourth
     [ 0, 4, 7, 14],          // 7, Added Ninth
     [ 0, 3, 6, 9],           // 8, Diminished Seventh
     [ 0, 3, 7, 10],          // 9, Minor Seventh
-    [ 0, 3, 7, 11]           // 10, Minor Major Seventh
+    [ 0, 4, 7, 10],          // 10, Major Seventh
+    [ 0, 3, 7, 11]           // 11, Minor Major Seventh
 
     ] @=> int chord [][];
 
