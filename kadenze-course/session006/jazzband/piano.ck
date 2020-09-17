@@ -24,7 +24,7 @@ while ( true )
   for( 0 => int i; i < 4; i++)
   {
     Std.mtof(chordz[1][i]) => piano[i].freq;
-    Math.random2f(0.5,1.0) => piano[i].noteOn;
+    Math.random2f(0.2,0.5) => piano[i].noteOn;
   }
   1.4::second => now;
 }

@@ -10,7 +10,7 @@ while ( true )
 {
   Math.random2f(0.1,0.3) => hihat.gain;
   Math.random2f(.9,1.2) => hihat.rate;
-  (Math.random2f(1,2) * 0.2)::second => now; // add swing feel
+  (Math.random2(1,2) * 0.2)::second => now; // add swing feel
   0 => hihat.pos; // play the file
 }
 

@@ -21,7 +21,7 @@ while ( true )
   {
     Math.random2(0,scale.cap() - 1) => int note;
     Math.mtof(24 + scale[note]) => solo.freq;
-    Math.random2f(0.3,1.0) => solo.noteOn;
+    Math.random2f(0.25,0.4) => solo.noteOn;
   }
   // rest
   else
